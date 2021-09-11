@@ -25,12 +25,21 @@ export default () => {
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        // 设置光源(环境光 & 点光源)
+        // 设置光源(环境光 & 平行光源)
         const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-        const point = new THREE.PointLight(0xffffff);
-        point.position.set(400, 200, 300);
         scene.add(ambient);
-        scene.add(point);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+        directionalLight.position.set(400, 200, 300);
+        scene.add(directionalLight);
+
+        const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.9);
+        directionalLight2.position.set(-400, -200, -300);
+        scene.add(directionalLight2);
+
+        // const point = new THREE.PointLight(0xffffff);
+        // point.position.set(400, 200, 300);
+        // scene.add(point);
 
         const width = window.innerWidth;
         const height = window.innerHeight;
