@@ -3,40 +3,65 @@
  * @author Flora
 */
 
+import React, { useEffect } from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+import './cube.css';
 
 export default () => {
-    const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
-    camera.position.set(0, 0, 100);
-    camera.lookAt(0, 0, 0);
+    useEffect(() => {
+        init();
+    }, []);
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(new THREE.Color(0x007000));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    const init = () => {
+        // 创建场景
+        const scene = new THREE.Scene();
 
-    // 创建材质
-    const material = new THREE.LineBasicMaterial({color: 0x0f00ff});
+        // 创建立方体
+        const geometry = new THREE.BoxGeometry(100, 100, 100);
+        const material = new THREE.MeshLambertMaterial({color: 0x0000ff});
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
 
-    // 顶点数据
-    const points = [];
-    points.push(new THREE.Vector3(-10, 0, 0));
-    points.push(new THREE.Vector3(0, 10, 0));
-    points.push(new THREE.Vector3(10, 0, 0));
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        // 设置光源(环境光 & 点光源)
+        const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+        const point = new THREE.PointLight(0xffffff);
+        point.position.set(400, 200, 300);
+        scene.add(ambient);
+        scene.add(point);
 
-    // 画线
-    const line = new THREE.Line(geometry, material);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const k = width / height;
+        const s = 150; // 三维场景显示范围控制系数，系数越大，显示的范围越大
 
-    // 添加到场景中
-    scene.add(line);
-    renderer.render(scene, camera);
+        // 创建相机对象
+        const camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+        camera.position.set(200, 300, 200);
+        camera.lookAt(scene.position);
+
+        // 创建渲染器
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true // 开启锯齿
+        });
+        renderer.setSize(width, height);
+        document.getElementById('threeBox')?.appendChild(renderer.domElement);
+
+        // 渲染函数
+        function render() {
+            renderer.render(scene, camera);
+            mesh.rotateY(0.01);
+            requestAnimationFrame(render);
+        }
+        render();
+
+        // 创建控件对象（监听鼠标变化，改变相机属性）
+        const controls = new OrbitControls(camera, renderer.domElement);
+    }
 
     return (
-        <div>
-            123
-        </div>
+        <div id="threeBox"></div>
     );
 };

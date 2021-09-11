@@ -13,8 +13,8 @@ export default () => {
                 <li>
                     <a href="#" className="navItem">案例作品</a>
                     <ul className="subNavBox">
-                        <li><Link to="/demo/threedemo2" className="navSubItem">demo1</Link></li>
-                        <li><Link to='/demo/threedemo3' className="navSubItem">demo2</Link></li>
+                        <li><Link to="/demo/cube" className="navSubItem">鼠标控制立方体</Link></li>
+                        <li><Link to='/demo/threedemo4' className="navSubItem">demo</Link></li>
                     </ul>
                 </li>
                 <li>
